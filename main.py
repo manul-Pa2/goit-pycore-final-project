@@ -7,6 +7,12 @@ from collections import defaultdict
 from src.handlers import *
 from src.entities import AddressBook
 
+class AddressBook:
+    def __init__(self):
+        self.data = {}
+        self.notes = NoteBook()
+
+
 def save_data(book: AddressBook, filename: str="addressbook.pkl") -> None:
     """
     Save AddressBook with all its object hierarchy to file in binary format
@@ -86,3 +92,36 @@ def main(start_empty: bool = False, filename: str = "addressbook.pkl"):
 
 if __name__ == "__main__":
     main()
+
+    ## Note and comment
+    class Note:
+     def __init__(self, text: str, tags=None):
+        self.text = text
+        self.tags = tags or []
+
+    def __str__(self):
+        tags_str = f" [tags: {', '.join(self.tags)}]" if self.tags else ""
+        return f"{self.text}{tags_str}"
+
+
+class NoteBook:
+    def __init__(self):
+        self.notes = []
+
+    def add(self, note: Note):
+        self.notes.append(note)
+
+    def delete(self, index: int):
+        if 0 <= index < len(self.notes):
+            del self.notes[index]
+            return True
+        return False
+
+    def search_by_tag(self, tag: str):
+        return [n for n in self.notes if tag in n.tags]
+
+    def __str__(self):
+        if not self.notes:
+            return "There are no Notes"
+        return "\n".join(f"{i}. {note}" for i, note in enumerate(self.notes))
+    
